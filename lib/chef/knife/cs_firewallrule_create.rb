@@ -35,6 +35,10 @@ module KnifeCloudstack
            :description => "Execute command as sync request",
            :boolean => true
 
+    option :public_ip,
+           :long => "--public_ip IP_ADDRESS",
+           :description => "Provide the public IP adrress. This makes it possible to create rules on VPCs"
+
     def run
 
       hostname = @name_args.shift
@@ -60,12 +64,16 @@ module KnifeCloudstack
       end
 
       # Lookup the public ip address of the server
-      server_public_address = connection.get_server_public_ip(server)
-      ip_address = connection.get_public_ip_address(server_public_address)
-
-      if ip_address.nil? || ip_address['id'].nil?
-        ui.error "Cannot find public ip address for hostname: #{hostname}."
-        exit 1
+      if config[:public_ip].nil?
+        server_public_address = connection.get_server_public_ip(server)
+        ip_address = connection.get_public_ip_address(server_public_address)
+  
+        if ip_address.nil? || ip_address['id'].nil?
+          ui.error "Cannot find public ip address for hostname: #{hostname}."
+          exit 1
+        end
+      else
+        ip_address = config[:public_ip]
       end
  
       @name_args.each do |rule|
