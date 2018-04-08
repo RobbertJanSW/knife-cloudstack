@@ -2,6 +2,7 @@
 # Author:: Ryan Holmes (<rholmes@edmunds.com>)
 # Author:: Sander Botman (<sbotman@schubergphilis.com>)
 # Author:: Sander van Harmelen (<svanharmelen@schubergphilis.com>)
+# Author:: Robbert-Jan Sperna Weiland (<rspernaweiland@schubergphilis.com>)
 # Copyright:: Copyright (c) 2011 Edmunds, Inc.
 # Copyright:: Copyright (c) 2013 Sander Botman.
 # License:: Apache License, Version 2.0
@@ -292,7 +293,7 @@ module KnifeCloudstack
       params['ipaddress'] = locate_config_value(:ik_private_ip) if locate_config_value(:ik_private_ip)
       params['size'] = locate_config_value(:size) if locate_config_value(:size)
 
-      server = connection.create_server(
+      @server = connection.create_server(
           hostname,
           locate_config_value(:cloudstack_service),
           locate_config_value(:cloudstack_template),
@@ -306,15 +307,15 @@ module KnifeCloudstack
       zone = zone_name ? connection.get_zone(zone_name) : connection.get_default_zone
 
       config[:public_ip] = false if zone['networktype'] == 'Basic'
-      public_ip = find_or_create_public_ip(server, connection)
+      @server['public_ip'] = find_or_create_public_ip(@server, connection)
 
       object_fields = []
       object_fields << ui.color("Name:", :cyan)
-      object_fields << server['name'].to_s
+      object_fields << @server['name'].to_s
       object_fields << ui.color("Password:", :cyan) if locate_config_value(:cloudstack_password)
-      object_fields << server['password'] if locate_config_value(:cloudstack_password)
+      object_fields << @server['password'] if locate_config_value(:cloudstack_password)
       object_fields << ui.color("Public IP:", :cyan)
-      object_fields << public_ip
+      object_fields << @server['public_ip']
 
       puts "\n"
       puts ui.list(object_fields, :uneven_columns_across, 2)
@@ -343,9 +344,9 @@ module KnifeCloudstack
 
       object_fields = []
       object_fields << ui.color("Name:", :cyan)
-      object_fields << server['name'].to_s
+      object_fields << @server['name'].to_s
       object_fields << ui.color("Public IP:", :cyan)
-      object_fields << public_ip
+      object_fields << @server['public_ip']
       object_fields << ui.color("Environment:", :cyan)
       object_fields << (config[:environment] || '_default')
       object_fields << ui.color("Run List:", :cyan)
@@ -355,7 +356,7 @@ module KnifeCloudstack
       puts ui.list(object_fields, :uneven_columns_across, 2)
       puts "\n"
 
-      bootstrap(server, public_ip).run
+      bootstrap(@server).run
     end
 
     def fetch_server_fqdn(ip_addr)
@@ -568,7 +569,8 @@ module KnifeCloudstack
       return RUBY_PLATFORM.scan('w32').size > 0
     end
 
-    def bootstrap(server, public_ip)
+    def bootstrap(server)
+      public_ip = server['public_ip']
       if @windows_image
         Chef::Log.debug("Windows Bootstrapping")
         bootstrap_for_windows_node(server, public_ip)
@@ -644,6 +646,10 @@ module KnifeCloudstack
       # may be needed for vpc_mode
       bootstrap.config[:host_key_verify] = config[:host_key_verify]
       bootstrap_common_params(bootstrap)
+    end
+
+    def self.server
+      @server
     end
 
   end
