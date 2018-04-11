@@ -88,14 +88,28 @@ module KnifeCloudstack
       startport = args[0]
       endport   = args[1] || args[0]
       protocol  = args[2] || "TCP"
-      cidrlist  = args[3] || "0.0.0.0/0"      
+      cidrlist  = args[3] || "0.0.0.0/0"
 
       # Required parameters
       params = {
-        'command' => 'createFirewallRule',
-        'ipaddressId' => ip_address['id'],
+        'ipaddressId' => ip_address['id']
         'protocol' => protocol
       }
+      
+      if config[:public_ip].nil?
+        params['command'] = 'createFirewallRule'
+      else
+        params['command'] = 'createNetworkACL'
+        # Random rule number; will be temp and hopefully wont hit collision
+        params['number'] = (0...4).map { [rand(10)] }.join
+        params['action'] = 'Allow'
+        params['traffictype'] = 'Ingress'
+        server = get_server(hostname)
+        server_nic_default = get_server_default_nic(server)
+        networkid = server_nic_default['networkid']
+        # Just assume we want this on the first (only?) acl for now:
+        params['aclid'] = connection.get_networkAcls(networkid).first
+      end
 
       # Optional parameters
       opt_params = {
