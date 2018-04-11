@@ -67,14 +67,15 @@ module KnifeCloudstack
       if config[:public_ip].nil?
         server_public_address = connection.get_server_public_ip(server)
         ip_address = connection.get_public_ip_address(server_public_address)
-  
-        if ip_address.nil? || ip_address['id'].nil?
-          ui.error "Cannot find public ip address for hostname: #{hostname}."
-          exit 1
-        end
       else
-        ip_address = config[:public_ip]
+        ip_address = connection.get_public_ip_address(config[:public_ip])
       end
+  
+      if ip_address.nil? || ip_address['id'].nil?
+        ui.error "Cannot find public ip address for hostname: #{hostname}."
+        exit 1
+      end
+
  
       @name_args.each do |rule|
         create_port_forwarding_rule(ip_address, server['id'], rule, connection, params)
