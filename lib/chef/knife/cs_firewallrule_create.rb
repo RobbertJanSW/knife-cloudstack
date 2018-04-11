@@ -41,8 +41,8 @@ module KnifeCloudstack
 
     def run
 
-      hostname = @name_args.shift
-      unless /^[a-zA-Z0-9][a-zA-Z0-9-]*$/.match hostname then
+      @hostname = @name_args.shift
+      unless /^[a-zA-Z0-9][a-zA-Z0-9-]*$/.match @hostname then
        ui.error "Invalid hostname. Please specify a short hostname, not an fqdn (e.g. 'myhost' instead of 'myhost.domain.com')."
         exit 1
       end
@@ -56,10 +56,10 @@ module KnifeCloudstack
 
       # Lookup the hostname in the connection result
       server = {}
-      connection_result.map { |n| server = n if n['name'].upcase == hostname.upcase }
+      connection_result.map { |n| server = n if n['name'].upcase == @hostname.upcase }
      
       if server['name'].nil?
-        ui.error "Cannot find hostname: #{hostname}."
+        ui.error "Cannot find hostname: #{@hostname}."
         exit 1
       end
 
@@ -67,14 +67,15 @@ module KnifeCloudstack
       if config[:public_ip].nil?
         server_public_address = connection.get_server_public_ip(server)
         ip_address = connection.get_public_ip_address(server_public_address)
-  
-        if ip_address.nil? || ip_address['id'].nil?
-          ui.error "Cannot find public ip address for hostname: #{hostname}."
-          exit 1
-        end
       else
-        ip_address = config[:public_ip]
+        ip_address = connection.get_public_ip_address(config[:public_ip])
       end
+  
+      if ip_address.nil? || ip_address['id'].nil?
+        ui.error "Cannot find public ip address for hostname: #{@hostname}."
+        exit 1
+      end
+
  
       @name_args.each do |rule|
         create_port_forwarding_rule(ip_address, server['id'], rule, connection, params)
@@ -87,14 +88,31 @@ module KnifeCloudstack
       startport = args[0]
       endport   = args[1] || args[0]
       protocol  = args[2] || "TCP"
-      cidrlist  = args[3] || "0.0.0.0/0"      
+      cidrlist  = args[3] || "0.0.0.0/0"
 
       # Required parameters
       params = {
-        'command' => 'createFirewallRule',
         'ipaddressId' => ip_address['id'],
         'protocol' => protocol
       }
+      
+      if config[:public_ip].nil?
+        params['command'] = 'createFirewallRule'
+      else
+        params['command'] = 'createNetworkACL'
+        # Random rule number; will be temp and hopefully wont hit collision
+        params['number'] = (0...4).map { [rand(10)] }.join
+        params['action'] = 'Allow'
+        params['traffictype'] = 'Ingress'
+        # To keep the def backwards compatible..
+        @hostname
+
+        server = connection.get_server(@hostname)
+        server_nic_default = connection.get_server_default_nic(server)
+        networkid = server_nic_default['networkid']
+        # Just assume we want this on the first (only?) acl for now:
+        params['aclid'] = connection.get_networkAcls(networkid).first['id']
+      end
 
       # Optional parameters
       opt_params = {
@@ -102,7 +120,7 @@ module KnifeCloudstack
         'endport' => endport,
         'cidrlist' => cidrlist
       }
-  
+
       params.merge!(opt_params)
  
       Chef::Log.debug("Creating Firewall Rule for

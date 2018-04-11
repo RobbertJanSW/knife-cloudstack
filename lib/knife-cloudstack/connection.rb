@@ -391,8 +391,7 @@ module CloudstackClient
       json = send_request(params)
       json['securitygroups'] || []
     end
-
-
+    
     ##
     # Finds the template with the specified name.
 
@@ -552,7 +551,21 @@ module CloudstackClient
       }
       nil
     end
+    
+    # Fetch acls applied to vpc
+    def get_networkAcls(networkid)
+      params = {
+        'command' => 'listNetworkACLLists',
+        'networkid' => networkid
+      }
 
+      json = send_request(params)
+      acls = json['networkacllist']
+
+      return nil unless acls
+      acls
+    end
+    
     ##
     # Filter data on regex or just on string
 
@@ -998,7 +1011,7 @@ module CloudstackClient
       puts "Error: Asynchronous request timed out"
       exit 1
     end
-
+    
   end # class
 end
 
