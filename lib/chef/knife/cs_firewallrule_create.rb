@@ -110,8 +110,7 @@ module KnifeCloudstack
         server = connection.get_server(@hostname)
         server_nic_default = connection.get_server_default_nic(server)
         networkid = server_nic_default['networkid']
-        # Just assume we want this on the first (only?) acl for now:
-        params['aclid'] = connection.get_networkAcls(networkid).first['id']
+        params['aclid'] = connection.get_network(networkid)['aclid']
       end
 
       # Optional parameters
