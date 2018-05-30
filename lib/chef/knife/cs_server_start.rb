@@ -35,6 +35,11 @@ module KnifeCloudstack
 
     banner "knife cs server start SERVER_NAME [SERVER_NAME ...] (options)"
 
+    option :confirm,
+           :long => "--confirm",
+           :description => "Dont ask for confirmation.",
+           :boolean => true
+
     def run
     validate_base_options
 
@@ -50,7 +55,7 @@ module KnifeCloudstack
        
         show_object_details(server, connection, rules)
 
-        result = confirm_action("Do you really want to start this server")
+        result = config[:confirm] ? true : confirm_action("Do you really want to start this server")
         if result
           print "#{ui.color("Waiting for startup", :magenta)}"
           connection.start_server(hostname)
