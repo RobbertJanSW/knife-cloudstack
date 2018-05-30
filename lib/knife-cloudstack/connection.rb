@@ -307,6 +307,26 @@ module CloudstackClient
     end
 
     ##
+    # Resets root password for server with the specified name.
+    #
+
+    def server_passwordreset(name)
+      server = get_server(name)
+      if !server || !server['id'] then
+        puts "\nError: Virtual machine '#{name}' does not exist"
+        exit 1
+      end
+
+      params = {
+          'command' => 'resetPasswordForVirtualMachine',
+          'id' => server['id']
+      }
+
+      json = send_async_request(params)
+      json['virtualmachine']
+    end
+
+    ##
     # Start the server with the specified name.
     #
 
