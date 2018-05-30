@@ -316,6 +316,8 @@ module KnifeCloudstack
       object_fields << @server['password'] if locate_config_value(:cloudstack_password)
       object_fields << ui.color("Public IP:", :cyan)
       object_fields << @server['public_ip']
+      object_fields << ui.color("id:", :cyan)
+      object_fields << @server['id']
 
       puts "\n"
       puts ui.list(object_fields, :uneven_columns_across, 2)
