@@ -40,6 +40,11 @@ module KnifeCloudstack
            :description => "Force stop the VM. The caller knows the VM is stopped.",
            :boolean => true
 
+    option :confirm,
+           :long => "--confirm",
+           :description => "Dont ask for confirmation.",
+           :boolean => true
+
     def run
       validate_base_options
 
@@ -56,15 +61,15 @@ module KnifeCloudstack
         show_object_details(server, connection, rules) 
 
         if config[:cloudstack_force_stop]
-          result = confirm_action("Do you really want to force stop this server")
-          if result 
+          result = config[:confirm] ? true : confirm_action("Do you really want to force stop this server")
+          if result
             print "#{ui.color("Forcefully stopping", :magenta)}"
             connection.stop_server(hostname,config[:cloudstack_force_stop])
             puts "\n"
             ui.msg("Stopped server #{hostname}")
           end
         else
-          result = confirm_action("Do you really want to stop this server")
+          result = config[:confirm] ? true : confirm_action("Do you really want to stop this server")
           if result
             print "#{ui.color("Stopping", :magenta)}"
             connection.stop_server(hostname)
