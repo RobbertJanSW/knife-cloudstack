@@ -54,8 +54,8 @@ module KnifeCloudstack
            :required => true,
            :on => :head
 
-    option :hypervisortype,
-           :long => "--hypervisortype=TYPE",
+    option :hypervisor,
+           :long => "--hypervisor=TYPE",
            :description => "Specify hypervisor type",
            :required => true,
            :on => :head
@@ -106,7 +106,7 @@ module KnifeCloudstack
         'displaytext' => locate_config_value(:displaytext),
         'ostypeid' => locate_config_value(:ostypeid),
         'volumeid' => locate_config_value(:volumeid),
-        'hypervisorType' => locate_config_value(:hypervisortype)
+        'hypervisor' => locate_config_value(:hypervisor)
       }
       params['ispublic'] = locate_config_value(:ispublic) if locate_config_value(:ispublic)
       params['isfeatured'] = locate_config_value(:isfeatured) if locate_config_value(:isfeatured)
