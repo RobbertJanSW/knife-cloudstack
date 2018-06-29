@@ -39,6 +39,10 @@ module KnifeCloudstack
            :long => "--keyword KEY",
            :description => "List by keyword"
 
+    option :vmname,
+            :long => "--vmname NAME",
+            :description => "Virtual machine name to list volumes for"
+
     def run
       validate_base_options
 
@@ -56,6 +60,10 @@ module KnifeCloudstack
       params['listall'] = locate_config_value(:listall) if locate_config_value(:listall)
       params['keyword'] = locate_config_value(:keyword) if locate_config_value(:keyword)
       params['name']    = locate_config_value(:name)    if locate_config_value(:name)
+      if locate_config_value(:vmname)
+        vm = connection.get_server(locate_config_value(:vmname))
+        params['virtualmachineid'] = vm['id']
+      end
       
       result = connection.list_object(params, "volume")
       list_object(columns, result)
