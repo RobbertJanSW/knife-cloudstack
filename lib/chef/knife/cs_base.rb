@@ -43,7 +43,7 @@ class Chef
                  :short => "-K SECRET",
                  :long => "--cloudstack-secret-key SECRET",
                  :description => "Your CloudStack secret key",
-                 :proc => Proc.new { |key| Chef::Config[:knife][:cloudstack_secret_key] = key }
+                 :proc => Proc.new { |key| Chef::Config[:knife][:cloudstack_secret_key] = secret }
 
           option :cloudstack_project,
                  :short => "-P PROJECT_NAME",
