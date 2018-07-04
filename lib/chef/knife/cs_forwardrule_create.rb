@@ -107,7 +107,7 @@ module KnifeCloudstack
       if other_params['vmguestip']
         # VPC based network
         # Find networkid associated with primary VM nic
-        server_default_nic = get_server_default_nic(server)
+        server_default_nic = connection.get_server_default_nic(server)
         networkid = nic['networkid']
         other_params['networkid'] = networkid
 
