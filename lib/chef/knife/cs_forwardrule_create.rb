@@ -106,7 +106,11 @@ module KnifeCloudstack
       if other_params['vmguestip']
         # VPC based network
         # Find networkid associated with ip_address
-        other_params['networkid'] = connection.get_networkid_from_ip_address(ip_address['ipaddress'])
+        networkid = connection.get_networkid_from_ip_address(ip_address['ipaddress'])
+        if networkid.nil? || networkid.empty?
+          raise "Could not determine networkid for ip_address #{ip_address['ipaddress']}"
+        end
+        other_params['networkid'] = networkid
 
         # Find id of public router IP
         public_ip = connection.get_public_ip_address(ip_address['ipaddress'])
