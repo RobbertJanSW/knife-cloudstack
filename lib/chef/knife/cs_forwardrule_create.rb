@@ -88,11 +88,12 @@ module KnifeCloudstack
       end
 
       @name_args.each do |rule|
-        create_port_forwarding_rule(ip_address, server['id'], rule, connection, params)
+        create_port_forwarding_rule(ip_address, server, rule, connection, params)
       end
     end
  
-    def create_port_forwarding_rule(ip_address, server_id, rule, connection, other_params)
+    def create_port_forwarding_rule(ip_address, server, rule, connection, other_params)
+      server_id = server['id']
       args = rule.split(':')
       public_port = args[0]
       private_port = args[1] || args[0]
@@ -105,11 +106,9 @@ module KnifeCloudstack
 
       if other_params['vmguestip']
         # VPC based network
-        # Find networkid associated with ip_address
-        networkid = connection.get_networkid_from_ip_address(ip_address['ipaddress'])
-        if networkid.nil? || networkid.empty?
-          raise "Could not determine networkid for ip_address #{ip_address['ipaddress']}"
-        end
+        # Find networkid associated with primary VM nic
+        server_default_nic = get_server_default_nic(server)
+        networkid = nic['networkid']
         other_params['networkid'] = networkid
 
         # Find id of public router IP
