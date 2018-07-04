@@ -108,7 +108,7 @@ module KnifeCloudstack
         # VPC based network
         # Find networkid associated with primary VM nic
         server_default_nic = connection.get_server_default_nic(server)
-        networkid = nic['networkid']
+        networkid = server_default_nic['networkid']
         other_params['networkid'] = networkid
 
         # Find id of public router IP
