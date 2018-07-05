@@ -298,7 +298,7 @@ module KnifeCloudstack
       params['displayname'] = if locate_config_value :set_display_name and locate_config_value :chef_node_name then locate_config_value :chef_node_name else hostname end
       params['ipaddress'] = locate_config_value(:ik_private_ip) if locate_config_value(:ik_private_ip)
       params['size'] = locate_config_value(:size) if locate_config_value(:size)
-      params['startvm'] = locate_config_value(:size) if locate_config_value(:startvm)
+      params['startvm'] = locate_config_value(:startvm) if locate_config_value(:startvm)
 
       @server = connection.create_server(
           hostname,
