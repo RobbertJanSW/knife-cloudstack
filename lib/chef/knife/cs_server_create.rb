@@ -88,6 +88,12 @@ module KnifeCloudstack
            :description => "The CloudStack disk offering name",
            :proc => Proc.new { |d| Chef::Config[:knife][:cloudstack_disk] = d }
 
+    option :cloudstack_diskcontroller,
+           :short => "-C DISKCONTROLLER",
+           :long => "--diskcontroller DISKCONTROLLER",
+           :description => "The CloudStack diskcontroller type",
+           :proc => Proc.new { |d| Chef::Config[:knife][:cloudstack_diskcontroller] = d }
+
     option :size,
            :long => "--size SIZE",
            :description => "The arbitrary size (GB) for the DATADISK volume"
@@ -299,6 +305,7 @@ module KnifeCloudstack
       params['ipaddress'] = locate_config_value(:ik_private_ip) if locate_config_value(:ik_private_ip)
       params['size'] = locate_config_value(:size) if locate_config_value(:size)
       params['startvm'] = config[:startvm]
+      params['diskcontroller'] = locate_config_value(:cloudstack_diskcontroller) if locate_config_value(:cloudstack_diskcontroller)
 
       @server = connection.create_server(
           hostname,
