@@ -34,7 +34,6 @@ module KnifeCloudstack
     option :displaytext,
            :long => "--displaytext DISPLAYTEXT",
            :description => "The display text of the template",
-           :required => true,
            :on => :head
 
     option :name,
@@ -44,19 +43,16 @@ module KnifeCloudstack
     option :ostypeid,
            :long => "--ostypeid ID",
            :description => "Specify OS type ID",
-           :required => true,
            :on => :head
 
     option :volumeid,
            :long => "--volumeid ID",
            :description => "Specify volume ID",
-           :required => true,
            :on => :head
 
     option :hypervisor,
            :long => "--hypervisor=TYPE",
            :description => "Specify hypervisor type",
-           :required => true,
            :on => :head
 
     option :ispublic,
