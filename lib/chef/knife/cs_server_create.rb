@@ -239,9 +239,7 @@ module KnifeCloudstack
 
     option :startvm,
            :long => "--[no-]startvm",
-           :description => "Specify whether the VM should be started after creation.",
-           :boolean => true,
-           :default => true
+           :description => "Specify whether the VM should be started after creation."
 
     option :bootstrap_proxy,
            :long => "--bootstrap-proxy PROXY_URL",
