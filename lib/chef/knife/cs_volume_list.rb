@@ -65,8 +65,12 @@ module KnifeCloudstack
         params['virtualmachineid'] = vm['id']
       end
       
-      result = connection.list_object(params, "volume")
-      list_object(columns, result)
+      @volumelist = connection.list_object(params, "volume")
+      list_object(columns, @volumelist)
+    end
+
+    def volumelist
+      @volumelist
     end
 
   end
