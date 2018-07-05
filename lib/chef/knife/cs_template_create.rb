@@ -32,7 +32,6 @@ module KnifeCloudstack
     banner "knife cs template create NAME (options)"
 
     option :displaytext,
-           :short => "-T 'DISPLAY TEXT' ",
            :long => "--displaytext 'DISPLAY TEXT'",
            :description => "The display text of the template",
            :required => true,
@@ -49,7 +48,7 @@ module KnifeCloudstack
            :on => :head
 
     option :volumeid,
-           :long => "--volumeid=ID",
+           :long => "--volumeid ID",
            :description => "Specify volume ID",
            :required => true,
            :on => :head
