@@ -32,7 +32,7 @@ module KnifeCloudstack
     banner "knife cs template create NAME (options)"
 
     option :displaytext,
-           :long => "--displaytext 'DISPLAY TEXT'",
+           :long => "--displaytext DISPLAYTEXT",
            :description => "The display text of the template",
            :required => true,
            :on => :head
