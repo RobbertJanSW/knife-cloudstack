@@ -55,6 +55,11 @@ module KnifeCloudstack
            :description => "Specify hypervisor type",
            :on => :head
 
+    option :optimisefor,
+           :long => "--optimisefor PROFILE",
+           :description => "Specify hardware optimisation (Generic vs Windows)",
+           :on => :head
+
     option :ispublic,
            :long => "--[no-]public",
 	   :description => "Make the template public after creation",
@@ -105,6 +110,7 @@ module KnifeCloudstack
       }
       params['ispublic'] = locate_config_value(:ispublic) if locate_config_value(:ispublic)
       params['isfeatured'] = locate_config_value(:isfeatured) if locate_config_value(:isfeatured)
+      params = ['optimisefor'] = locate_config_value(:optimisefor) if locate_config_value(:optimisefor)
       params['passwordenabled'] = locate_config_value(:passwordenabled) if locate_config_value(:passwordenabled)
       params['isextractable'] = locate_config_value(:extractable) if locate_config_value(:extractable)
       json = connection.send_request(params)
