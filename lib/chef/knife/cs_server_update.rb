@@ -37,12 +37,7 @@ module KnifeCloudstack
       validate_base_options
 
       params = {}
-      for arg in config
-        arg_split = arg.split("=")
-        params[arg_split[0]] = arg_split[1]
-      end
-
-      @server = connection.server_update(params)
+      @server = connection.server_update(config)
     end
 
   end
