@@ -37,7 +37,10 @@ module KnifeCloudstack
       validate_base_options
 
       params = {}
-      @server = connection.server_update(config)
+      for key in config.keys
+        params["#{key}"] = config[:"#{key}"]
+      end
+      @server = connection.server_update(params)
     end
 
   end
