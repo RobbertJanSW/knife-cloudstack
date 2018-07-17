@@ -34,6 +34,8 @@ module KnifeCloudstack
     banner "knife cs server update [SERVER_NAME] (options)"
 
     def run
+      validate_base_options
+
       params = {}
       while arg = @name_args.shift do
         arg_split = arg.split("=")
