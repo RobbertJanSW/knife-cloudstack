@@ -37,7 +37,7 @@ module KnifeCloudstack
       validate_base_options
 
       params = {}
-      while arg = @name_args.shift do
+      for arg in config
         arg_split = arg.split("=")
         params[arg_split[0]] = arg_split[1]
       end
