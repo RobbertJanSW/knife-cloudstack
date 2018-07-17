@@ -168,6 +168,15 @@ module CloudstackClient
       json['virtualmachine'] || []
     end
 
+    ## Updates a server
+    def server_update(params)
+      params['command'] = 'updateVirtualMachine'
+
+      json = send_request(params)
+      json
+    end
+
+
     ##
     # Deploys a new server using the specified parameters.
 
