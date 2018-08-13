@@ -34,6 +34,12 @@ module KnifeCloudstack
 
     banner "knife cs server delete SERVER_NAME [SERVER_NAME ...] (options)"
 
+    option :chefserver,
+           :long => "--[no-]chefserver",
+           :description => "Skip Chef server node/client deletion",
+           :boolean => true,
+           :default => true
+
     def run
       validate_base_options
 
@@ -65,7 +71,7 @@ module KnifeCloudstack
 
           # delete chef client and node
           node_name = hostname  # connection.get_server_fqdn server ## server create doesn't add fqdn!
-          delete_chef = confirm_action("Do you want to delete the chef node and client '#{node_name}'")
+          delete_chef = locate_config_value(:chefserver) ? confirm_action("Do you want to delete the chef node and client '#{node_name}'") : false
           if delete_chef
             delete_node node_name
             delete_client node_name
