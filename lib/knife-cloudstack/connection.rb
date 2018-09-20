@@ -52,7 +52,7 @@ module CloudstackClient
   class Connection
 
     ASYNC_POLL_INTERVAL = 5.0
-    ASYNC_TIMEOUT = 600
+    ASYNC_TIMEOUT = 3600
 
     def initialize(api_url, api_key, secret_key, project_name=nil, no_ssl_verify=false, api_proxy=nil)
       @api_url = api_url
