@@ -306,7 +306,6 @@ module KnifeCloudstack
       params['size'] = locate_config_value(:size) if locate_config_value(:size)
       params['startvm'] = config[:startvm]
       params['diskcontroller'] = locate_config_value(:cloudstack_diskcontroller) if locate_config_value(:cloudstack_diskcontroller)
-      params['cloudstack_password'] = locate_config_value(:cloudstack_password) if locate_config_value(:cloudstack_password)
 
       @server = connection.create_server(
           hostname,
