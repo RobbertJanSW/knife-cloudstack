@@ -105,7 +105,8 @@ module KnifeCloudstack
     option :cloudstack_password,
            :long => "--cloudstack-password",
            :description => "Enables auto-generated passwords by Cloudstack",
-           :boolean => true
+           :boolean => true,
+           :default => true
 
     option :public_ip,
            :long => "--[no-]public-ip",
