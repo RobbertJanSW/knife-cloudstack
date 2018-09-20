@@ -302,10 +302,11 @@ module KnifeCloudstack
       params['keypair'] = locate_config_value :keypair  if locate_config_value :keypair
       params['affinitygroupnames'] = locate_config_value :aag if locate_config_value :aag
       params['displayname'] = if locate_config_value :set_display_name and locate_config_value :chef_node_name then locate_config_value :chef_node_name else hostname end
-      params['ipaddress'] = locate_config_value(:ik_private_ip) if locate_config_value(:ik_private_ip)
+      params['ipaddress'] = params
       params['size'] = locate_config_value(:size) if locate_config_value(:size)
       params['startvm'] = config[:startvm]
       params['diskcontroller'] = locate_config_value(:cloudstack_diskcontroller) if locate_config_value(:cloudstack_diskcontroller)
+      params['cloudstack_password'] = locate_config_value(:cloudstack_password) if locate_config_value(:cloudstack_password)
 
       @server = connection.create_server(
           hostname,
@@ -314,7 +315,6 @@ module KnifeCloudstack
           locate_config_value(:cloudstack_disk),
           locate_config_value(:cloudstack_zone),
           locate_config_value(:cloudstack_networks),
-          locate_config_value(:cloudstack_password),
           params
       )
 
