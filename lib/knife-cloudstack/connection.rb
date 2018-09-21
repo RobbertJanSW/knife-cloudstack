@@ -270,8 +270,6 @@ module CloudstackClient
       params['diskOfferingId'] = disk['id'] if disk
 
       json = send_async_request(params)
-      require 'pp'
-      pp json
       json['virtualmachine']
     end
 
